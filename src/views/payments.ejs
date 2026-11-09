@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payments · Dental Lab Register</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/app.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <%- include('partials/nav', { user, active }) %>
+
+  <div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-secondary btn-sm" id="prevMonth" title="Previous month">&lsaquo;</button>
+        <input type="month" id="month" class="form-control form-control-sm" style="width: 160px">
+        <button class="btn btn-outline-secondary btn-sm" id="nextMonth" title="Next month">&rsaquo;</button>
+        <select id="doctorFilter" class="form-select form-select-sm" style="width: 200px">
+          <option value="">All doctors</option>
+          <% cfg.doctors.forEach((d) => { %><option value="<%= d.id %>"><%= d.name %></option><% }) %>
+        </select>
+      </div>
+      <% if (cfg.canEdit) { %>
+        <button id="addBtn" class="btn btn-primary btn-sm text-nowrap" <%= cfg.doctors.length ? '' : 'disabled' %>>+ Add payment</button>
+      <% } %>
+    </div>
+
+    <% if (!cfg.doctors.length) { %>
+      <div class="alert alert-warning">Add at least one <a href="/doctors">doctor</a> before recording payments.</div>
+    <% } %>
+    <div id="alert" class="alert d-none" role="alert"></div>
+
+    <div class="card shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-bordered table-grid table-striped table-hover table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Date</th><th>Dr. Name</th><th class="num">Amount</th><th>Note</th>
+              <% if (cfg.canEdit) { %><th></th><% } %>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+          <tfoot>
+            <tr><td colspan="<%= cfg.canEdit ? 5 : 4 %>" id="summary" class="fw-semibold"></td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <% if (cfg.canEdit) { %>
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="editForm">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="modalTitle"></h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="formError" class="alert alert-danger py-2 d-none"></div>
+          <div class="mb-3">
+            <label class="form-label" for="f_paid_on">Date *</label>
+            <input type="date" class="form-control" id="f_paid_on" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="f_doctor_id">Dr. Name *</label>
+            <select class="form-select" id="f_doctor_id" required>
+              <option value="">Select…</option>
+              <% cfg.doctors.forEach((d) => { %><option value="<%= d.id %>"><%= d.name %></option><% }) %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="f_amount">Amount (₹) *</label>
+            <input type="number" class="form-control" id="f_amount" min="0.01" step="0.01" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="f_note">Note</label>
+            <input class="form-control" id="f_note" maxlength="200" placeholder="Cash / UPI / cheque no." autocomplete="off">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <% } %>
+
+  <script id="cfg" type="application/json"><%- JSON.stringify(cfg).replace(/</g, '\\u003c') %></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/payments.js"></script>
+</body>
+</html>

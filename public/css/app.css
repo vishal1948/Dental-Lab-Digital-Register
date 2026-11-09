@@ -1,0 +1,45 @@
+/* Well-defined, bordered tables (register, lists, challan) */
+.table-grid {
+  --bs-table-border-color: #7b858f;
+  --bs-table-striped-bg: #f4f6f8;
+  font-size: .9rem;
+  border: 1px solid #7b858f;
+}
+.table-grid > thead > tr > th {
+  background: #dde3e9;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  border-bottom: 2px solid #7b858f;
+}
+.table-grid > tbody > tr > td { vertical-align: middle; }
+.table-grid > tfoot > tr > td { background: #eef1f4; border-top: 2px solid #7b858f; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Palmer-style tooth cell: upper over lower, right | left */
+.pal { display: inline-grid; grid-template-columns: minmax(1.7rem, auto) minmax(1.7rem, auto); font-variant-numeric: tabular-nums; letter-spacing: .08em; line-height: 1.3; }
+.pal span { min-height: 1.3em; }
+.pal .r { text-align: right; padding: 0 .4rem 0 .15rem; border-right: 1px solid #495057; }
+.pal .l { text-align: left; padding: 0 .15rem 0 .4rem; }
+.pal .b { border-top: 1px solid #495057; }
+
+/* Case form tooth chart */
+.tooth { min-width: 2.1rem; }
+.teeth-chart .quad { min-height: 3.2rem; }
+
+/* Delivery challan sheet */
+.sheet { max-width: 210mm; }
+.lab-name { font-size: 1.6rem; font-weight: 700; letter-spacing: .03em; color: #0b4f9c; }
+.sig { border-top: 1px solid #212529; padding-top: .25rem; min-width: 220px; font-size: .85rem; }
+
+@page { size: A4; margin: 12mm; }
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; }
+  .sheet { border: 0 !important; padding: 0 !important; max-width: none; box-shadow: none !important; }
+  .table-grid { font-size: .85rem; }
+  .table-grid > thead { display: table-header-group; }
+  .table-grid tr { page-break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

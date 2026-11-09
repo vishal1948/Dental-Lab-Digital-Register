@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand bg-white border-bottom">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-semibold" href="/cases">Dental Lab Register</a>
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item"><a class="nav-link <%= active === 'cases' ? 'active' : '' %>" href="/cases">Cases</a></li>
+      <li class="nav-item"><a class="nav-link <%= active === 'challans' ? 'active' : '' %>" href="/challans">Challans</a></li>
+      <li class="nav-item"><a class="nav-link <%= active === 'invoices' ? 'active' : '' %>" href="/invoices">Invoices</a></li>
+      <li class="nav-item"><a class="nav-link <%= active === 'payments' ? 'active' : '' %>" href="/payments">Payments</a></li>
+      <li class="nav-item"><a class="nav-link <%= active === 'balances' ? 'active' : '' %>" href="/balances">Balances</a></li>
+      <li class="nav-item"><a class="nav-link <%= active === 'doctors' ? 'active' : '' %>" href="/doctors">Doctors</a></li>
+      <li class="nav-item"><a class="nav-link <%= active === 'work-types' ? 'active' : '' %>" href="/work-types">Work types</a></li>
+    </ul>
+    <form method="post" action="/logout" class="d-flex align-items-center gap-3 mb-0">
+      <span class="text-muted small">
+        <%= user.username %>
+        <span class="badge text-bg-<%= user.role === 'admin' ? 'primary' : 'secondary' %>"><%= user.role %></span>
+      </span>
+      <button class="btn btn-outline-secondary btn-sm" type="submit">Logout</button>
+    </form>
+  </div>
+</nav>

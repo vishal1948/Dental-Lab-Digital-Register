@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delivery Challan <%= challan.challan_no %> · <%= lab.name %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/app.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="no-print"><%- include('partials/nav', { user, active }) %></div>
+
+  <div class="container py-3">
+    <div class="no-print d-flex gap-2 mb-3">
+      <button id="printBtn" class="btn btn-primary btn-sm">Print</button>
+      <a class="btn btn-outline-secondary btn-sm" href="/cases">Back to register</a>
+      <a class="btn btn-outline-secondary btn-sm" href="/challans">All challans</a>
+      <% if (user.role === 'admin') { %>
+        <button id="cancelBtn" data-id="<%= challan.id %>" class="btn btn-outline-danger btn-sm ms-auto">Cancel challan</button>
+      <% } %>
+    </div>
+
+    <div class="sheet bg-white border p-4 mx-auto">
+      <div class="d-flex justify-content-between align-items-start border-bottom border-2 pb-2 mb-3">
+        <div>
+          <div class="lab-name"><%= lab.name %></div>
+          <div class="small"><%= lab.address %></div>
+          <div class="small">E-mail: <%= lab.email %></div>
+          <div class="small">Contact: <%= lab.contact %> &middot; Cell: <%= lab.phones.join(', ') %></div>
+        </div>
+        <div class="text-end">
+          <div class="h5 mb-1">DELIVERY CHALLAN</div>
+          <div>No.: <strong><%= challan.challan_no %></strong></div>
+          <div>Date: <strong><%= dmy(challan.challan_date) %></strong></div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <strong>Dr.:</strong> <%= challan.doctor %>
+        <% if (challan.clinic) { %> &middot; <%= challan.clinic %><% } %>
+        <% if (challan.phone) { %> &middot; <%= challan.phone %><% } %>
+      </div>
+
+      <table class="table table-bordered table-grid table-sm mb-0">
+        <thead>
+          <tr>
+            <th>Sr. No.</th><th>Date</th><th>Model No.</th><th>Patient Name</th><th>Tooth No.</th>
+            <th>Work Type</th><th>Qty</th><th>Rate</th><th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cases.forEach((c) => { const p = palmer(c.teeth); %>
+            <tr>
+              <td><%= c.sr_no %></td>
+              <td class="text-nowrap"><%= dmy(c.case_date) %></td>
+              <td><%= c.model_no %></td>
+              <td><%= c.patient_name %></td>
+              <td>
+                <% if (p.UR || p.UL || p.LR || p.LL) { %>
+                  <div class="pal"><span class="r"><%= p.UR %></span><span class="l"><%= p.UL %></span><span class="r b"><%= p.LR %></span><span class="l b"><%= p.LL %></span></div>
+                <% } %>
+              </td>
+              <td><%= c.work_type %></td>
+              <td class="num"><%= c.qty %></td>
+              <td class="num"><%= inr(c.rate) %></td>
+              <td class="num"><%= inr(c.total) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6" class="text-end fw-semibold">Total</td>
+            <td class="num fw-semibold"><%= totalQty %></td>
+            <td></td>
+            <td class="num fw-semibold">&#8377; <%= inr(total) %></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="d-flex justify-content-between align-items-end" style="margin-top: 70px;">
+        <div class="sig">Receiver's Signature</div>
+        <div class="sig text-end">For <%= lab.name %></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="/js/challan.js"></script>
+</body>
+</html>
